@@ -1,5 +1,17 @@
+def promedio(file)
+  File.open('promedio.csv', 'w') { |f| f.print '' }
+  file.each do |line|
+    arr = line.split(', ')
+    name = arr.shift
+    prom = arr.inject(0) { |acc, num| acc + num.to_i } / arr.length.to_f
+    File.open('promedio.csv', 'a') { |f| f.print "#{name}, #{prom}\n" }
+  end
+end
+
 opt = 0
 while opt != 4
+  file = []
+  File.open('alumnos.csv', 'r') { |f| file = f.readlines.map(&:chomp) }
   puts "MENU\n*****************************"
   puts '1.- Promedio por alumno'
   puts '2.- Inasistencias por alumno'
@@ -9,11 +21,11 @@ while opt != 4
   opt = gets.chomp.to_i
   case opt
   when 1
-    puts 'hola'
+    promedio(file)
   when 2
-    puts 'hola'
+    inasistencias(file)
   when 3
-    puts 'hola'
+    aprobados(file)
   when 4
     puts 'Programa terminado'
   else
