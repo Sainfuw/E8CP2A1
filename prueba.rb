@@ -1,5 +1,5 @@
 opt = 0
-while opt != 6
+while opt != 4
   puts "MENU\n*****************************"
   puts '1.- Promedio por alumno'
   puts '2.- Inasistencias por alumno'
