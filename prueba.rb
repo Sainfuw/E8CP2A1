@@ -1,4 +1,4 @@
-def saveread(archive)
+def readfile(archive)
   file = File.open(archive, 'r')
   data = file.readlines.map(&:chomp)
   file.close
@@ -6,7 +6,7 @@ def saveread(archive)
 end
 
 def promedio
-  file = saveread('alumnos.csv')
+  file = readfile('alumnos.csv')
   File.open('promedio.csv', 'w') { |f| f.print '' }
   file.each do |line|
     arr = line.split(', ')
@@ -16,8 +16,13 @@ def promedio
   end
 end
 
+def escribir_promedios
+  prom = readfile('promedio.csv')
+  puts prom
+end
+
 def inasistencias
-  file = saveread('alumnos.csv')
+  file = readfile('alumnos.csv')
   file.each do |line|
     fault = 0
     arr = line.split(', ')
@@ -30,11 +35,11 @@ def inasistencias
 end
 
 def aprobados(aprueba = 5)
-  proms = saveread('promedio.csv')
-  puts 'Aprobados : '
+  proms = readfile('promedio.csv')
+  puts 'Aprobados: '
   proms.each do |line|
     arr = line.split(', ')
-    puts arr[0] if arr[1].to_i >= aprueba
+    puts "#{arr[0]}, " if arr[1].to_i >= aprueba
   end
 end
 
@@ -50,10 +55,13 @@ while opt != 4
   case opt
   when 1
     promedio
+    escribir_promedios
   when 2
     inasistencias
   when 3
-    aprobados(7)
+    print 'Ingrese la nota para aprobar el curso: '
+    aprueba = gets.chomp.to_i
+    aprueba.zero? ? aprobados : aprobados(aprueba)
   when 4
     puts 'Programa terminado'
   else
