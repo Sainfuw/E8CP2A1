@@ -5,20 +5,22 @@ def readfile(archive)
   data
 end
 
-def promedio
-  file = readfile('alumnos.csv')
-  File.open('promedio.csv', 'w') { |f| f.print '' }
+def obtener_promedio(archive)
+  promedios = ''
+  file = readfile(archive)
   file.each do |line|
     arr = line.split(', ')
     name = arr.shift
     prom = arr.inject(0) { |acc, num| acc + num.to_i } / arr.length.to_f
-    File.open('promedio.csv', 'a') { |f| f.print "#{name}, #{prom}\n" }
+    promedios += "#{name}, #{prom}\n"
   end
+  promedios
 end
 
-def escribir_promedios
-  prom = readfile('promedio.csv')
-  puts prom
+def promedio
+  promedios = obtener_promedio('alumnos.csv')
+  File.open('promedio.csv', 'w') { |f| f.puts promedios }
+  print promedios
 end
 
 def inasistencias
@@ -34,12 +36,12 @@ def inasistencias
   end
 end
 
-def aprobados(aprueba = 5)
-  proms = readfile('promedio.csv')
-  puts 'Aprobados: '
-  proms.each do |line|
+def aprobados(aprueba = 5.0)
+  promedios = obtener_promedio('alumnos.csv').split("\n")
+  puts "Aprobados con nota (#{aprueba}): "
+  promedios.each do |line|
     arr = line.split(', ')
-    puts "#{arr[0]}, " if arr[1].to_i >= aprueba
+    puts "#{arr[0]} aprueba con nota: #{arr[1]}" if arr[1].to_f >= aprueba
   end
 end
 
@@ -55,12 +57,11 @@ while opt != 4
   case opt
   when 1
     promedio
-    escribir_promedios
   when 2
     inasistencias
   when 3
     print 'Ingrese la nota para aprobar el curso: '
-    aprueba = gets.chomp.to_i
+    aprueba = gets.chomp.to_f
     aprueba.zero? ? aprobados : aprobados(aprueba)
   when 4
     puts 'Programa terminado'
